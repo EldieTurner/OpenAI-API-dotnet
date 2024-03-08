@@ -71,10 +71,25 @@ namespace OpenAI_API
 			return api;
 		}
 
-		/// <summary>
-		/// Text generation is the core function of the API. You give the API a prompt, and it generates a completion. The way you “program” the API to do a task is by simply describing the task in plain english or providing a few written examples. This simple approach works for a wide range of use cases, including summarization, translation, grammar correction, question answering, chatbots, composing emails, and much more (see the prompt library for inspiration).
-		/// </summary>
-		public ICompletionEndpoint Completions { get; }
+        /// <summary>
+        /// Instantiates a version of the API for connecting to the Locallly hosted OpenAI compatable endpoint instead of the main OpenAI endpoint.
+        /// </summary>
+        /// <param name="yourResorceurl">The url of your resource e.g. 'https://localhost:11434'</param>
+        /// <param name="apiVersion">The version in the url e.g. 'v1'</param>
+        /// <param name="apiKey">The API authentication information to use for API calls, or <see langword="null"/> to attempt to use the <see cref="APIAuthentication.Default"/>, potentially loading from environment vars or from a config file.  Currently this library only supports the api-key flow, not the AD-Flow.</param>
+        /// <returns></returns>
+        public static OpenAIAPI ForOther(string yourResorceurl, string apiVersion, APIAuthentication apiKey = null)
+        {
+            OpenAIAPI api = new OpenAIAPI(apiKey);
+            api.ApiVersion = apiVersion ?? "v1";
+            api.ApiUrlFormat = yourResorceurl + "/{0}/{1}";
+            return api;
+        }
+
+        /// <summary>
+        /// Text generation is the core function of the API. You give the API a prompt, and it generates a completion. The way you “program” the API to do a task is by simply describing the task in plain english or providing a few written examples. This simple approach works for a wide range of use cases, including summarization, translation, grammar correction, question answering, chatbots, composing emails, and much more (see the prompt library for inspiration).
+        /// </summary>
+        public ICompletionEndpoint Completions { get; }
 
 		/// <summary>
 		/// The API lets you transform text into a vector (list) of floating point numbers. The distance between two vectors measures their relatedness. Small distances suggest high relatedness and large distances suggest low relatedness.
